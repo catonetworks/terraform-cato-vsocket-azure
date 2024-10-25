@@ -12,7 +12,7 @@ provider "cato" {
 resource "cato_socket_site" "azure-site" {
     connection_type  = "SOCKET_AZ1500"
     description = var.site_description
-    name = var.project_name
+    name = var.site_name
     native_range = {
       native_network_range = var.vnet_prefix
       local_ip = var.lan_ip
@@ -83,7 +83,7 @@ resource "azurerm_virtual_machine_extension" "vsocket-custom-script" {
   virtual_machine_id         = azurerm_virtual_machine.vsocket.id
   settings = <<SETTINGS
  {
-  "commandToExecute": "${"echo '${data.cato-oss_accountSnapshotSite.azure-site.info.sockets[0].serial}' > /cato/serial.txt"};${join(";", var.commands)}"
+  "commandToExecute": "${"echo '${data.cato_accountSnapshotSite.azure-site.info.sockets[0].serial}' > /cato/serial.txt"};${join(";", var.commands)}"
  }
 SETTINGS
   depends_on = [
