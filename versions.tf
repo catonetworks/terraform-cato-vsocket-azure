@@ -1,6 +1,6 @@
 terraform {
   required_providers {
-    cato-oss = {
+    cato = {
       source = "catonetworks/cato"
     }
     azurerm = {
