@@ -6,7 +6,7 @@
 - Initial commit with single socket instance with 3 NICs
 - Added default vales for required parameters
 
-## 0.0.7 (2024-11-15)
+## 0.0.8 (2024-11-15)
 
 ### Features
 - Added lifecycle.ignore_changes=all to disk and extension to be able to apply and not rebuild socket
