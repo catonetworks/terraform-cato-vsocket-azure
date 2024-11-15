@@ -63,6 +63,9 @@ resource "azurerm_managed_disk" "vSocket-disk1" {
   disk_size_gb         = var.disk_size_gb
   os_type              = "Linux"
   image_reference_id   = var.image_reference_id
+  lifecycle {
+    ignore_changes = all
+  }
 }
 
 variable "commands" {
@@ -81,6 +84,9 @@ resource "azurerm_virtual_machine_extension" "vsocket-custom-script" {
   type                       = "CustomScript"
   type_handler_version       = "2.1"
   virtual_machine_id         = azurerm_virtual_machine.vsocket.id
+  lifecycle {
+    ignore_changes = all
+  }
   settings = <<SETTINGS
  {
   "commandToExecute": "${"echo '${data.cato_accountSnapshotSite.azure-site.info.sockets[0].serial}' > /cato/serial.txt"};${join(";", var.commands)}"
