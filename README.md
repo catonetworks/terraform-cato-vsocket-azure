@@ -1,6 +1,6 @@
 # CATO VSOCKET Azure Terraform module 
 
-Terraform module which creates an Azure Socket Site in the Cato Management Application (CMA), and deploys a virtual socket ec2 instance in Azure.
+Terraform module which creates an Azure Socket Site in the Cato Management Application (CMA), and deploys a virtual socket instance in Azure.
 
 ## Usage
 
