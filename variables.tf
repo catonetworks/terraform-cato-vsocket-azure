@@ -1,5 +1,8 @@
 ## vSocket Module Varibables
-variable token {}
+variable token {
+  description = "API key"
+  type = string
+}
 
 variable "account_id" {
   description = "Account ID"
@@ -7,9 +10,15 @@ variable "account_id" {
   default	  = null
 }
 
-variable "site_description" {
+variable "subscription_id" {
+  description = "Azure Subscription ID"
   type = string
+}
+
+variable "site_description" {
   description = "Site description"
+  type = string
+
 }
 
 variable "site_type" {
@@ -23,8 +32,8 @@ variable "site_type" {
 }
 
 variable "site_name" {
-  type = string
   description = "Your Cato Site Name Here"
+  type = string
   default = null
 }
 
@@ -43,18 +52,18 @@ variable "site_location" {
   }
 }
 
-variable "vnet_prefix" {
-  type = string
+variable "native_network_range" {
   description = <<EOT
-  	Choose a unique range for your new VPC that does not conflict with the rest of your Wide Area Network.
+  	Choose a unique range for your new LAN Subnet within your vnet that does not conflict with the rest of your Wide Area Network.
     The accepted input format is Standard CIDR Notation, e.g. X.X.X.X/X
 	EOT
+  type = string
 }
 
 variable "vm_size" {
-  type = string
   description = "(Required) Specifies the size of the Virtual Machine. See also Azure VM Naming Conventions. https://learn.microsoft.com/en-us/azure/virtual-machines/vm-naming-conventions"
   default = "Standard_D8ls_v5"
+  type = string
 }
 
 variable "disk_size_gb" {
@@ -68,21 +77,22 @@ variable "disk_size_gb" {
 }
 
 variable "lan_ip" {
-	type = string
   description = "Local IP Address of socket LAN interface"
+  type = string
 	default = null
 }
 
 ## Vsocket Params
 variable "location" { 
-  type = string
   description = "(Required) The Azure Region where the Resource Group should exist. Changing this forces a new Resource Group to be created."
+  type = string
   default = null
+
 }
 
 variable "resource-group-name" { 
-  type = string
   description = "(Required) The Name which should be used for this Resource Group. Changing this forces a new Resource Group to be created."
+  type = string
   default = null
 }
 
@@ -101,8 +111,26 @@ variable "lan-nic-id" {
   default = null
 }
 
+variable "vsocket-disk-name" {
+  description = "Cato vSocket Disk name"
+  type = string
+  default = "Cato-vsocket-Disk"
+}
+
+variable "vsocket-vm-name" {
+  description = "Azure Cato vSocket name"
+  type = string
+  default = "Cato-vSocket"
+}
+
+variable "vsocket-custom-script-name" {
+  description = "Cato vSocket custom script name"
+  type = string
+  default = "vsocket-custom-script"
+}
+
 variable "image_reference_id" {
-	type = string
   description = "Path to image used to deploy specific version of the virutal socket"
+	type = string
 	default = "/Subscriptions/38b5ec1d-b3b6-4f50-a34e-f04a67121955/Providers/Microsoft.Compute/Locations/eastus/Publishers/catonetworks/ArtifactTypes/VMImage/Offers/cato_socket/Skus/public-cato-socket/Versions/19.0.17805"
 }

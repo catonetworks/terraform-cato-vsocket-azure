@@ -1,6 +1,7 @@
 ## vSocket Module Resources
 provider "azurerm" {
 	features {}
+  subscription_id = var.subscription_id
 }
 
 provider "cato" {
@@ -14,7 +15,7 @@ resource "cato_socket_site" "azure-site" {
     description = var.site_description
     name = var.site_name
     native_range = {
-      native_network_range = var.vnet_prefix
+      native_network_range = var.native_network_range
       local_ip = var.lan_ip
     }
     site_location = var.site_location
@@ -28,7 +29,7 @@ data "cato_accountSnapshotSite" "azure-site" {
 ## Create Vsocket Virtual Machine
 resource "azurerm_virtual_machine" "vsocket" {
   location                     = var.location
-  name                         = "${var.site_name}-vSocket"
+  name                         = var.vsocket-vm-name
   network_interface_ids        = [var.mgmt-nic-id, var.wan-nic-id, var.lan-nic-id]
   primary_network_interface_id = var.mgmt-nic-id
   resource_group_name          = var.resource-group-name
@@ -44,18 +45,32 @@ resource "azurerm_virtual_machine" "vsocket" {
   }
   storage_os_disk {
     create_option     = "Attach"
-    name              = "${var.site_name}-vSocket-disk1"
+    name              = var.vsocket-disk-name
     managed_disk_id   = azurerm_managed_disk.vSocket-disk1.id
     os_type = "Linux"
   }
   
   depends_on = [
-    azurerm_managed_disk.vSocket-disk1
+    azurerm_managed_disk.vSocket-disk1,
+    data.cato_accountSnapshotSite.azure-site-2
   ]
 }
 
+# Allow vSocket to be disconnected to delete site
+resource "null_resource" "sleep_before_delete" {
+  provisioner "local-exec" {
+    when    = destroy
+    command = "sleep 10"
+  }
+}
+
+data "cato_accountSnapshotSite" "azure-site-2" {
+	id = cato_socket_site.azure-site.id
+  depends_on = [ null_resource.sleep_before_delete ]
+}
+
 resource "azurerm_managed_disk" "vSocket-disk1" {
-  name                 = "${var.site_name}-vSocket-disk1"
+  name                 = var.vsocket-disk-name
   location             = var.location
   resource_group_name  = var.resource-group-name
   storage_account_type = "Standard_LRS"
@@ -79,7 +94,7 @@ variable "commands" {
 
 resource "azurerm_virtual_machine_extension" "vsocket-custom-script" {
   auto_upgrade_minor_version = true
-  name                       = "vsocket-custom-script"
+  name                       = var.vsocket-custom-script-name
   publisher                  = "Microsoft.Azure.Extensions"
   type                       = "CustomScript"
   type_handler_version       = "2.1"
@@ -96,3 +111,4 @@ SETTINGS
     azurerm_virtual_machine.vsocket
   ]
 }
+
