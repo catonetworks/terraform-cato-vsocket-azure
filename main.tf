@@ -1,15 +1,3 @@
-## vSocket Module Resources
-provider "azurerm" {
-	features {}
-  subscription_id = var.subscription_id
-}
-
-provider "cato" {
-    baseurl = "https://api.catonetworks.com/api/v1/graphql2"
-    token = var.token
-    account_id = var.account_id
-}
-
 resource "cato_socket_site" "azure-site" {
     connection_type  = "SOCKET_AZ1500"
     description = var.site_description
@@ -32,7 +20,7 @@ resource "azurerm_virtual_machine" "vsocket" {
   name                         = var.vsocket-vm-name
   network_interface_ids        = [var.mgmt-nic-id, var.wan-nic-id, var.lan-nic-id]
   primary_network_interface_id = var.mgmt-nic-id
-  resource_group_name          = var.resource-group-name
+  resource_group_name          = var.resource_group_name
   vm_size                      = var.vm_size
   plan {
     name      = "public-cato-socket"
@@ -72,7 +60,7 @@ data "cato_accountSnapshotSite" "azure-site-2" {
 resource "azurerm_managed_disk" "vSocket-disk1" {
   name                 = var.vsocket-disk-name
   location             = var.location
-  resource_group_name  = var.resource-group-name
+  resource_group_name  = var.resource_group_name
   storage_account_type = "Standard_LRS"
   create_option        = "FromImage"
   disk_size_gb         = var.disk_size_gb
@@ -112,3 +100,10 @@ SETTINGS
   ]
 }
 
+resource "cato_license" "license" {
+  depends_on = [ azurerm_virtual_machine_extension.vsocket-custom-script ]
+  count = var.license_id == null ? 0 : 1
+  site_id = cato_socket_site.azure-site.id
+  license_id = var.license_id
+  bw = var.license_bw == null ? null : var.license_bw
+}

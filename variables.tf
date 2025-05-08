@@ -1,24 +1,6 @@
-## vSocket Module Varibables
-variable token {
-  description = "API key"
-  type = string
-}
-
-variable "account_id" {
-  description = "Account ID"
-  type        = number
-  default	  = null
-}
-
-variable "subscription_id" {
-  description = "Azure Subscription ID"
-  type = string
-}
-
 variable "site_description" {
   description = "Site description"
   type = string
-
 }
 
 variable "site_type" {
@@ -90,7 +72,7 @@ variable "location" {
 
 }
 
-variable "resource-group-name" { 
+variable "resource_group_name" { 
   description = "(Required) The Name which should be used for this Resource Group. Changing this forces a new Resource Group to be created."
   type = string
   default = null
@@ -133,4 +115,16 @@ variable "image_reference_id" {
   description = "Path to image used to deploy specific version of the virutal socket"
 	type = string
 	default = "/Subscriptions/38b5ec1d-b3b6-4f50-a34e-f04a67121955/Providers/Microsoft.Compute/Locations/eastus/Publishers/catonetworks/ArtifactTypes/VMImage/Offers/cato_socket/Skus/public-cato-socket/Versions/19.0.17805"
+}
+
+variable "license_id" {
+  description = "The license ID for the Cato vSocket of license type CATO_SITE, CATO_SSE_SITE, CATO_PB, CATO_PB_SSE.  Example License ID value: 'abcde123-abcd-1234-abcd-abcde1234567'.  Note that licenses are for commercial accounts, and not supported for trial accounts."
+  type        = string
+  default     = null
+}
+
+variable "license_bw" {
+  description = "The license bandwidth number for the cato site, specifying bandwidth ONLY applies for pooled licenses.  For a standard site license that is not pooled, leave this value null. Must be a number greater than 0 and an increment of 10."
+  type        = string
+  default     = null
 }

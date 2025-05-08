@@ -2,20 +2,31 @@
 
 Terraform module which creates an Azure Socket Site in the Cato Management Application (CMA), and deploys a virtual socket instance in Azure.
 
+## NOTE
+- For help with finding exact sytax to match site location for city, state_name, country_name and timezone, please refer to the [cato_siteLocation data source](https://registry.terraform.io/providers/catonetworks/cato/latest/docs/data-sources/siteLocation).
+- For help with finding a license id to assign, please refer to the [cato_licensingInfo data source](https://registry.terraform.io/providers/catonetworks/cato/latest/docs/data-sources/licensingInfo).
+
+
 ## Usage
 
 ```hcl
+provider "azurerm" {
+  subscription_id = var.azure_subscription_id
+  features {}
+}
+
+provider "cato" {
+  baseurl    = var.baseurl
+  token      = var.cato_token
+  account_id = var.account_id
+}
+
 module "vsocket-azure" {
   source                     = "catonetworks/vsocket-azure/cato"
-  token                      = "xxxxxxx"
-  account_id                 = "xxxxxxx"
   native_network_range       = "10.0.0.0/16"
-  lan_local_ip               = "10.0.3.5"
+  local_ip                   = "10.0.3.5"
   location                   = "East US"
-  resource-group-name        = "Your_Resource_Group_Name_Here"
-  vsocket-disk-name          = "Your_vSocket_Disk_Name_Here"
-  vsocket-vm-name            = "Your_Virtual_Machine_Name_Here"
-  vsocket-custom-script-name = "Your_Virtual_Machine_Custom_Script_Name_Here"
+  resource_group_name        = "Your_Resource_Group_Name_Here"
   mgmt-nic-id                = "/subscriptions/abcde-1234-abcd-1234-abcde12345/resourceGroups/Azure_Socket_Site/providers/Microsoft.Network/networkInterfaces/Azure_Socket_Site-vs0nicMgmt"
   wan-nic-id                 = "/subscriptions/abcde-1234-abcd-1234-abcde12345/resourceGroups/Azure_Socket_Site/providers/Microsoft.Network/networkInterfaces/Azure_Socket_Site-vs0nicWan"
   lan-nic-id                 = "/subscriptions/abcde-1234-abcd-1234-abcde12345/resourceGroups/Azure_Socket_Site/providers/Microsoft.Network/networkInterfaces/Azure_Socket_Site-vs0nicLan"
