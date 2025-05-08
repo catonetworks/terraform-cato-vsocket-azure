@@ -16,8 +16,9 @@
 ### Features
 - Removed nested providers and variables, updated resource_group_name naming convention to be consistent 
 
-## 0.0.10 (2024-05-07)
+## 0.0.13 (2024-05-07)
 
 ### Features
 - Added optional license resource and inputs used for commercial site deployments
+- Added tfdocs to readme
 
