@@ -1,17 +1,17 @@
 resource "cato_socket_site" "azure-site" {
-    connection_type  = "SOCKET_AZ1500"
-    description = var.site_description
-    name = var.site_name
-    native_range = {
-      native_network_range = var.native_network_range
-      local_ip = var.lan_ip
-    }
-    site_location = var.site_location
-    site_type = var.site_type
+  connection_type = "SOCKET_AZ1500"
+  description     = var.site_description
+  name            = var.site_name
+  native_range = {
+    native_network_range = var.native_network_range
+    local_ip             = var.lan_ip
+  }
+  site_location = var.site_location
+  site_type     = var.site_type
 }
 
 data "cato_accountSnapshotSite" "azure-site" {
-	id = cato_socket_site.azure-site.id
+  id = cato_socket_site.azure-site.id
 }
 
 ## Create Vsocket Virtual Machine
@@ -32,12 +32,12 @@ resource "azurerm_virtual_machine" "vsocket" {
     storage_uri = ""
   }
   storage_os_disk {
-    create_option     = "Attach"
-    name              = var.vsocket-disk-name
-    managed_disk_id   = azurerm_managed_disk.vSocket-disk1.id
-    os_type = "Linux"
+    create_option   = "Attach"
+    name            = var.vsocket-disk-name
+    managed_disk_id = azurerm_managed_disk.vSocket-disk1.id
+    os_type         = "Linux"
   }
-  
+
   depends_on = [
     azurerm_managed_disk.vSocket-disk1,
     data.cato_accountSnapshotSite.azure-site-2
@@ -53,8 +53,8 @@ resource "null_resource" "sleep_before_delete" {
 }
 
 data "cato_accountSnapshotSite" "azure-site-2" {
-	id = cato_socket_site.azure-site.id
-  depends_on = [ null_resource.sleep_before_delete ]
+  id         = cato_socket_site.azure-site.id
+  depends_on = [null_resource.sleep_before_delete]
 }
 
 resource "azurerm_managed_disk" "vSocket-disk1" {
@@ -72,12 +72,12 @@ resource "azurerm_managed_disk" "vSocket-disk1" {
 }
 
 variable "commands" {
-  type    = list(string)
+  type = list(string)
   default = [
     "rm /cato/deviceid.txt",
     "rm /cato/socket/configuration/socket_registration.json",
     "nohup /cato/socket/run_socket_daemon.sh &"
-   ]
+  ]
 }
 
 resource "azurerm_virtual_machine_extension" "vsocket-custom-script" {
@@ -101,9 +101,9 @@ SETTINGS
 }
 
 resource "cato_license" "license" {
-  depends_on = [ azurerm_virtual_machine_extension.vsocket-custom-script ]
-  count = var.license_id == null ? 0 : 1
-  site_id = cato_socket_site.azure-site.id
+  depends_on = [azurerm_virtual_machine_extension.vsocket-custom-script]
+  count      = var.license_id == null ? 0 : 1
+  site_id    = cato_socket_site.azure-site.id
   license_id = var.license_id
-  bw = var.license_bw == null ? null : var.license_bw
+  bw         = var.license_bw == null ? null : var.license_bw
 }
