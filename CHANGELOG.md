@@ -22,3 +22,8 @@
 - Added optional license resource and inputs used for commercial site deployments
 - Added tfdocs to readme
 
+## 0.0.14 (2024-05-15)
+
+### Features
+- Add all outputs and fixed input params to remove default null values for required fields
+

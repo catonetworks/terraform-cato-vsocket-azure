@@ -103,14 +103,14 @@ No modules.
 | <a name="input_commands"></a> [commands](#input\_commands) | n/a | `list(string)` | <pre>[<br/>  "rm /cato/deviceid.txt",<br/>  "rm /cato/socket/configuration/socket_registration.json",<br/>  "nohup /cato/socket/run_socket_daemon.sh &"<br/>]</pre> | no |
 | <a name="input_disk_size_gb"></a> [disk\_size\_gb](#input\_disk\_size\_gb) | Disk size in GB | `number` | `8` | no |
 | <a name="input_image_reference_id"></a> [image\_reference\_id](#input\_image\_reference\_id) | Path to image used to deploy specific version of the virutal socket | `string` | `"/Subscriptions/38b5ec1d-b3b6-4f50-a34e-f04a67121955/Providers/Microsoft.Compute/Locations/eastus/Publishers/catonetworks/ArtifactTypes/VMImage/Offers/cato_socket/Skus/public-cato-socket/Versions/19.0.17805"` | no |
-| <a name="input_lan-nic-id"></a> [lan-nic-id](#input\_lan-nic-id) | n/a | `string` | `null` | no |
+| <a name="input_lan-nic-id"></a> [lan-nic-id](#input\_lan-nic-id) | The ID of the local area network (LAN) network interface card (NIC). | `string` | n/a | yes |
 | <a name="input_lan_ip"></a> [lan\_ip](#input\_lan\_ip) | Local IP Address of socket LAN interface | `string` | `null` | no |
 | <a name="input_license_bw"></a> [license\_bw](#input\_license\_bw) | The license bandwidth number for the cato site, specifying bandwidth ONLY applies for pooled licenses.  For a standard site license that is not pooled, leave this value null. Must be a number greater than 0 and an increment of 10. | `string` | `null` | no |
 | <a name="input_license_id"></a> [license\_id](#input\_license\_id) | The license ID for the Cato vSocket of license type CATO\_SITE, CATO\_SSE\_SITE, CATO\_PB, CATO\_PB\_SSE.  Example License ID value: 'abcde123-abcd-1234-abcd-abcde1234567'.  Note that licenses are for commercial accounts, and not supported for trial accounts. | `string` | `null` | no |
-| <a name="input_location"></a> [location](#input\_location) | (Required) The Azure Region where the Resource Group should exist. Changing this forces a new Resource Group to be created. | `string` | `null` | no |
-| <a name="input_mgmt-nic-id"></a> [mgmt-nic-id](#input\_mgmt-nic-id) | n/a | `string` | `null` | no |
+| <a name="input_location"></a> [location](#input\_location) | (Required) The Azure Region where the Resource Group should exist. Changing this forces a new Resource Group to be created. | `string` | n/a | yes |
+| <a name="input_mgmt-nic-id"></a> [mgmt-nic-id](#input\_mgmt-nic-id) | The ID of the management network interface card (NIC). | `string` | n/a | yes |
 | <a name="input_native_network_range"></a> [native\_network\_range](#input\_native\_network\_range) | Choose a unique range for your new LAN Subnet within your vnet that does not conflict with the rest of your Wide Area Network.<br/>    The accepted input format is Standard CIDR Notation, e.g. X.X.X.X/X | `string` | n/a | yes |
-| <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | (Required) The Name which should be used for this Resource Group. Changing this forces a new Resource Group to be created. | `string` | `null` | no |
+| <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | (Required) The Name which should be used for this Resource Group. Changing this forces a new Resource Group to be created. | `string` | n/a | yes |
 | <a name="input_site_description"></a> [site\_description](#input\_site\_description) | Site description | `string` | n/a | yes |
 | <a name="input_site_location"></a> [site\_location](#input\_site\_location) | n/a | <pre>object({<br/>    city         = string<br/>    country_code = string<br/>    state_code   = string<br/>    timezone     = string<br/>  })</pre> | <pre>{<br/>  "city": "New York",<br/>  "country_code": "US",<br/>  "state_code": "US-NY",<br/>  "timezone": "America/New_York"<br/>}</pre> | no |
 | <a name="input_site_name"></a> [site\_name](#input\_site\_name) | Your Cato Site Name Here | `string` | `null` | no |
@@ -119,13 +119,19 @@ No modules.
 | <a name="input_vsocket-custom-script-name"></a> [vsocket-custom-script-name](#input\_vsocket-custom-script-name) | Cato vSocket custom script name | `string` | `"vsocket-custom-script"` | no |
 | <a name="input_vsocket-disk-name"></a> [vsocket-disk-name](#input\_vsocket-disk-name) | Cato vSocket Disk name | `string` | `"Cato-vsocket-Disk"` | no |
 | <a name="input_vsocket-vm-name"></a> [vsocket-vm-name](#input\_vsocket-vm-name) | Azure Cato vSocket name | `string` | `"Cato-vSocket"` | no |
-| <a name="input_wan-nic-id"></a> [wan-nic-id](#input\_wan-nic-id) | n/a | `string` | `null` | no |
+| <a name="input_wan-nic-id"></a> [wan-nic-id](#input\_wan-nic-id) | The ID of the wide area network (WAN) network interface card (NIC). | `string` | n/a | yes |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
 | <a name="output_cato_license"></a> [cato\_license](#output\_cato\_license) | Cato site license info |
-| <a name="output_socket_site_id"></a> [socket\_site\_id](#output\_socket\_site\_id) | #The following attributes are exported: |
-| <a name="output_socket_site_serial"></a> [socket\_site\_serial](#output\_socket\_site\_serial) | n/a |
+| <a name="output_socket_site_id"></a> [socket\_site\_id](#output\_socket\_site\_id) | The ID of the Cato socket site |
+| <a name="output_socket_site_location"></a> [socket\_site\_location](#output\_socket\_site\_location) | The location of the Cato socket site |
+| <a name="output_socket_site_name"></a> [socket\_site\_name](#output\_socket\_site\_name) | The name of the Cato socket site |
+| <a name="output_socket_site_serial"></a> [socket\_site\_serial](#output\_socket\_site\_serial) | The serial number of the first socket in the Cato account snapshot site |
+| <a name="output_vsocket_custom_script_name"></a> [vsocket\_custom\_script\_name](#output\_vsocket\_custom\_script\_name) | The name of the custom script extension for the vSocket virtual machine |
+| <a name="output_vsocket_disk_id"></a> [vsocket\_disk\_id](#output\_vsocket\_disk\_id) | The ID of the managed disk attached to the vSocket virtual machine |
+| <a name="output_vsocket_vm_id"></a> [vsocket\_vm\_id](#output\_vsocket\_vm\_id) | The ID of the vSocket virtual machine |
+| <a name="output_vsocket_vm_name"></a> [vsocket\_vm\_name](#output\_vsocket\_vm\_name) | The name of the vSocket virtual machine |
 <!-- END_TF_DOCS -->

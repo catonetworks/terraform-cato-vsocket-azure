@@ -68,29 +68,26 @@ variable "lan_ip" {
 variable "location" {
   description = "(Required) The Azure Region where the Resource Group should exist. Changing this forces a new Resource Group to be created."
   type        = string
-  default     = null
-
 }
 
 variable "resource_group_name" {
   description = "(Required) The Name which should be used for this Resource Group. Changing this forces a new Resource Group to be created."
   type        = string
-  default     = null
 }
 
 variable "mgmt-nic-id" {
-  type    = string
-  default = null
+  description = "The ID of the management network interface card (NIC)."
+  type        = string
 }
 
 variable "wan-nic-id" {
-  type    = string
-  default = null
+  description = "The ID of the wide area network (WAN) network interface card (NIC)."
+  type        = string
 }
 
 variable "lan-nic-id" {
-  type    = string
-  default = null
+  description = "The ID of the local area network (LAN) network interface card (NIC)."
+  type        = string
 }
 
 variable "vsocket-disk-name" {
