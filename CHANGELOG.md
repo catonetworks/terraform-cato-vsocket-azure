@@ -27,3 +27,8 @@
 ### Features
 - Add all outputs and fixed input params to remove default null values for required fields
 
+## 0.1.0 (2024-05-29)
+
+### Features
+- Updated module to use the new azurerm_linux_virtual_machine resource, as the azurerm_virtual_machine resource is no longer maintained by Azure/Terraform. 
+

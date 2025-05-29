@@ -14,34 +14,101 @@ data "cato_accountSnapshotSite" "azure-site" {
   id = cato_socket_site.azure-site.id
 }
 
+## Create random strings for auth, as a socket does not allow auth but the instance requires it
+resource "random_string" "vsocket-random-username" {
+  length  = 16
+  special = false
+}
+
+resource "random_string" "vsocket-random-password" {
+  length  = 16
+  special = false
+  upper   = true
+  lower   = true
+  numeric = true
+}
+
+data "azurerm_network_interface" "mgmt" {
+  name                = var.mgmt_nic_name
+  resource_group_name = var.resource_group_name
+}
+
+data "azurerm_network_interface" "wan" {
+  name                = var.wan_nic_name
+  resource_group_name = var.resource_group_name
+}
+
+data "azurerm_network_interface" "lan" {
+  name                = var.lan_nic_name
+  resource_group_name = var.resource_group_name
+}
+
 ## Create Vsocket Virtual Machine
-resource "azurerm_virtual_machine" "vsocket" {
-  location                     = var.location
-  name                         = var.vsocket-vm-name
-  network_interface_ids        = [var.mgmt-nic-id, var.wan-nic-id, var.lan-nic-id]
-  primary_network_interface_id = var.mgmt-nic-id
-  resource_group_name          = var.resource_group_name
-  vm_size                      = var.vm_size
+resource "azurerm_linux_virtual_machine" "vsocket" {
+  location            = var.location
+  name                = var.vsocket-vm-name
+  resource_group_name = var.resource_group_name
+  size                = var.vm_size
+  network_interface_ids = [
+    data.azurerm_network_interface.mgmt.id,
+    data.azurerm_network_interface.wan.id,
+    data.azurerm_network_interface.lan.id
+  ]
+  disable_password_authentication = false
+  provision_vm_agent              = true
+  allow_extension_operations      = true
+  admin_username                  = random_string.vsocket-random-username.result
+  admin_password                  = "${random_string.vsocket-random-password.result}@"
+
+  # Boot diagnostics
+  boot_diagnostics {
+    storage_account_uri = "" # Empty string enables boot diagnostics
+  }
+
+  # OS disk configuration from image
+  os_disk {
+    name                 = var.vsocket-disk-name
+    caching              = "ReadWrite"
+    storage_account_type = "Standard_LRS"
+    disk_size_gb         = 8
+  }
+
   plan {
     name      = "public-cato-socket"
-    product   = "cato_socket"
     publisher = "catonetworks"
+    product   = "cato_socket"
   }
-  boot_diagnostics {
-    enabled     = true
-    storage_uri = ""
-  }
-  storage_os_disk {
-    create_option   = "Attach"
-    name            = var.vsocket-disk-name
-    managed_disk_id = azurerm_managed_disk.vSocket-disk1.id
-    os_type         = "Linux"
+
+
+  source_image_reference {
+    publisher = "catonetworks"
+    offer     = "cato_socket"
+    sku       = "public-cato-socket"
+    version   = "23.0.19605"
   }
 
   depends_on = [
-    azurerm_managed_disk.vSocket-disk1,
     data.cato_accountSnapshotSite.azure-site-2
   ]
+}
+
+# Second lookup for nics_config
+data "azurerm_network_interface" "mgmt-2" {
+  depends_on          = [azurerm_linux_virtual_machine.vsocket]
+  name                = var.mgmt_nic_name
+  resource_group_name = var.resource_group_name
+}
+
+data "azurerm_network_interface" "wan-2" {
+  depends_on          = [azurerm_linux_virtual_machine.vsocket]
+  name                = var.wan_nic_name
+  resource_group_name = var.resource_group_name
+}
+
+data "azurerm_network_interface" "lan-2" {
+  depends_on          = [azurerm_linux_virtual_machine.vsocket]
+  name                = var.lan_nic_name
+  resource_group_name = var.resource_group_name
 }
 
 # Allow vSocket to be disconnected to delete site
@@ -57,25 +124,9 @@ data "cato_accountSnapshotSite" "azure-site-2" {
   depends_on = [null_resource.sleep_before_delete]
 }
 
-resource "azurerm_managed_disk" "vSocket-disk1" {
-  name                 = var.vsocket-disk-name
-  location             = var.location
-  resource_group_name  = var.resource_group_name
-  storage_account_type = "Standard_LRS"
-  create_option        = "FromImage"
-  disk_size_gb         = var.disk_size_gb
-  os_type              = "Linux"
-  image_reference_id   = var.image_reference_id
-  lifecycle {
-    ignore_changes = all
-  }
-}
-
 variable "commands" {
   type = list(string)
   default = [
-    "rm /cato/deviceid.txt",
-    "rm /cato/socket/configuration/socket_registration.json",
     "nohup /cato/socket/run_socket_daemon.sh &"
   ]
 }
@@ -86,17 +137,20 @@ resource "azurerm_virtual_machine_extension" "vsocket-custom-script" {
   publisher                  = "Microsoft.Azure.Extensions"
   type                       = "CustomScript"
   type_handler_version       = "2.1"
-  virtual_machine_id         = azurerm_virtual_machine.vsocket.id
+  virtual_machine_id         = azurerm_linux_virtual_machine.vsocket.id
   lifecycle {
     ignore_changes = all
   }
+
   settings = <<SETTINGS
- {
-  "commandToExecute": "${"echo '${data.cato_accountSnapshotSite.azure-site.info.sockets[0].serial}' > /cato/serial.txt"};${join(";", var.commands)}"
- }
-SETTINGS
+  {
+  "commandToExecute": "echo '{\"wan_ip\" : \"${data.azurerm_network_interface.wan-2.private_ip_address}\", \"wan_name\" : \"${data.azurerm_network_interface.wan-2.name}\", \"wan_nic_mac\" : \"${lower(replace(data.azurerm_network_interface.wan-2.mac_address, "-", ":"))}\", \"lan_ip\" : \"${data.azurerm_network_interface.lan-2.private_ip_address}\", \"lan_name\" : \"${data.azurerm_network_interface.lan-2.name}\", \"lan_nic_mac\" : \"${lower(replace(data.azurerm_network_interface.lan-2.mac_address, "-", ":"))}\"}' > /cato/nics_config.json; echo '${data.cato_accountSnapshotSite.azure-site.info.sockets[0].serial}' > /cato/serial.txt;${join(";", var.commands)}"
+  }
+  SETTINGS
   depends_on = [
-    azurerm_virtual_machine.vsocket
+    data.azurerm_network_interface.lan-2,
+    data.azurerm_network_interface.wan-2,
+    data.azurerm_network_interface.mgmt-2
   ]
 }
 

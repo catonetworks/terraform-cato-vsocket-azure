@@ -26,17 +26,12 @@ output "socket_site_location" {
 
 output "vsocket_vm_id" {
   description = "The ID of the vSocket virtual machine"
-  value       = azurerm_virtual_machine.vsocket.id
+  value       = azurerm_linux_virtual_machine.vsocket.id
 }
 
 output "vsocket_vm_name" {
   description = "The name of the vSocket virtual machine"
-  value       = azurerm_virtual_machine.vsocket.name
-}
-
-output "vsocket_disk_id" {
-  description = "The ID of the managed disk attached to the vSocket virtual machine"
-  value       = azurerm_managed_disk.vSocket-disk1.id
+  value       = azurerm_linux_virtual_machine.vsocket.name
 }
 
 output "vsocket_custom_script_name" {

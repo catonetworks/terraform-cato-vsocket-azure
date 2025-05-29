@@ -75,18 +75,18 @@ variable "resource_group_name" {
   type        = string
 }
 
-variable "mgmt-nic-id" {
-  description = "The ID of the management network interface card (NIC)."
+variable "mgmt_nic_name" {
+  description = "The name of the primary management network interface."
   type        = string
 }
 
-variable "wan-nic-id" {
-  description = "The ID of the wide area network (WAN) network interface card (NIC)."
+variable "wan_nic_name" {
+  description = "The name of the primary WAN network interface."
   type        = string
 }
 
-variable "lan-nic-id" {
-  description = "The ID of the local area network (LAN) network interface card (NIC)."
+variable "lan_nic_name" {
+  description = "The name of the primary LAN network interface."
   type        = string
 }
 
@@ -111,7 +111,7 @@ variable "vsocket-custom-script-name" {
 variable "image_reference_id" {
   description = "Path to image used to deploy specific version of the virutal socket"
   type        = string
-  default     = "/Subscriptions/38b5ec1d-b3b6-4f50-a34e-f04a67121955/Providers/Microsoft.Compute/Locations/eastus/Publishers/catonetworks/ArtifactTypes/VMImage/Offers/cato_socket/Skus/public-cato-socket/Versions/19.0.17805"
+  default     = "/Subscriptions/38b5ec1d-b3b6-4f50-a34e-f04a67121955/Providers/Microsoft.Compute/Locations/eastus/Publishers/catonetworks/ArtifactTypes/VMImage/Offers/cato_socket/Skus/public-cato-socket/Versions/23.0.19605"
 }
 
 variable "license_id" {
