@@ -90,6 +90,7 @@ resource "azurerm_linux_virtual_machine" "vsocket" {
   depends_on = [
     data.cato_accountSnapshotSite.azure-site-2
   ]
+  tags = var.tags
 }
 
 # Second lookup for nics_config
