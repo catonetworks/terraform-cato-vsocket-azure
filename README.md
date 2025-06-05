@@ -54,6 +54,11 @@ $ catocli query siteLocation -h
 $ catocli query siteLocation '{"filters":[{"search": "San Diego","field":"city","operation":"exact"}]}' -p
 ```
 
+## Example Diagram
+<details><summary> Example Diagram </summary>
+<img src="./images/terraform-cato-vsocket-azure.png"></img>
+</details>
+
 ## Authors
 
 Module is maintained by [Cato Networks](https://github.com/catonetworks) with help from [these awesome contributors](https://github.com/catonetworks/terraform-cato-vsocket-azure/graphs/contributors).
@@ -69,13 +74,13 @@ Apache 2 Licensed. See [LICENSE](https://github.com/catonetworks/terraform-cato-
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13 |
-| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | ~> 4.1.0 |
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | ~> 4.31.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | ~> 4.1.0 |
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | ~> 4.31.0 |
 | <a name="provider_cato"></a> [cato](#provider\_cato) | n/a |
 | <a name="provider_null"></a> [null](#provider\_null) | n/a |
 | <a name="provider_random"></a> [random](#provider\_random) | n/a |
@@ -122,7 +127,8 @@ No modules.
 | <a name="input_site_description"></a> [site\_description](#input\_site\_description) | Site description | `string` | n/a | yes |
 | <a name="input_site_location"></a> [site\_location](#input\_site\_location) | n/a | <pre>object({<br/>    city         = string<br/>    country_code = string<br/>    state_code   = string<br/>    timezone     = string<br/>  })</pre> | <pre>{<br/>  "city": "New York",<br/>  "country_code": "US",<br/>  "state_code": "US-NY",<br/>  "timezone": "America/New_York"<br/>}</pre> | no |
 | <a name="input_site_name"></a> [site\_name](#input\_site\_name) | Your Cato Site Name Here | `string` | `null` | no |
-| <a name="input_site_type"></a> [site\_type](#input\_site\_type) | The type of the site | `string` | `"DATACENTER"` | no |
+| <a name="input_site_type"></a> [site\_type](#input\_site\_type) | The type of the site | `string` | `"CLOUD_DC"` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | A Map of Keys and Values to Describe the infrastructure | `map(any)` | `null` | no |
 | <a name="input_vm_size"></a> [vm\_size](#input\_vm\_size) | (Required) Specifies the size of the Virtual Machine. See also Azure VM Naming Conventions. https://learn.microsoft.com/en-us/azure/virtual-machines/vm-naming-conventions | `string` | `"Standard_D8ls_v5"` | no |
 | <a name="input_vsocket-custom-script-name"></a> [vsocket-custom-script-name](#input\_vsocket-custom-script-name) | Cato vSocket custom script name | `string` | `"vsocket-custom-script"` | no |
 | <a name="input_vsocket-disk-name"></a> [vsocket-disk-name](#input\_vsocket-disk-name) | Cato vSocket Disk name | `string` | `"Cato-vsocket-Disk"` | no |
