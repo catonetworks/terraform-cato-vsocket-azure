@@ -3,7 +3,6 @@
 Terraform module which creates an Azure Socket Site in the Cato Management Application (CMA), and deploys a virtual socket instance in Azure.
 
 ## NOTE
-- For help with finding exact sytax to match site location for city, state_name, country_name and timezone, please refer to the [cato_siteLocation data source](https://registry.terraform.io/providers/catonetworks/cato/latest/docs/data-sources/siteLocation).
 - For help with finding a license id to assign, please refer to the [cato_licensingInfo data source](https://registry.terraform.io/providers/catonetworks/cato/latest/docs/data-sources/licensingInfo).
 
 
@@ -33,25 +32,7 @@ module "vsocket-azure" {
   site_name                  = "Azure Site US East"
   site_description           = "Azure Site US East"
   site_type                  = "CLOUD_DC"
-  site_location = {
-    city         = "New York City"
-    country_code = "US"
-    state_code   = "US-NY" ## Optional - for countries with states"
-    timezone     = "America/New_York"
-  }
 }
-```
-
-## Site Location Reference
-
-For more information on site_location syntax, use the [Cato CLI](https://github.com/catonetworks/cato-cli) to lookup values.
-
-```bash
-$ pip3 install catocli
-$ export CATO_TOKEN="your-api-token-here"
-$ export CATO_ACCOUNT_ID="your-account-id"
-$ catocli query siteLocation -h
-$ catocli query siteLocation '{"filters":[{"search": "San Diego","field":"city","operation":"exact"}]}' -p
 ```
 
 ## Example Diagram
@@ -108,6 +89,7 @@ No modules.
 | [azurerm_network_interface.wan-2](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/network_interface) | data source |
 | [cato_accountSnapshotSite.azure-site](https://registry.terraform.io/providers/catonetworks/cato/latest/docs/data-sources/accountSnapshotSite) | data source |
 | [cato_accountSnapshotSite.azure-site-2](https://registry.terraform.io/providers/catonetworks/cato/latest/docs/data-sources/accountSnapshotSite) | data source |
+| [cato_siteLocation.site_location](https://registry.terraform.io/providers/catonetworks/cato/latest/docs/data-sources/siteLocation) | data source |
 
 ## Inputs
 
@@ -125,7 +107,7 @@ No modules.
 | <a name="input_native_network_range"></a> [native\_network\_range](#input\_native\_network\_range) | Choose a unique range for your new LAN Subnet within your vnet that does not conflict with the rest of your Wide Area Network.<br/>    The accepted input format is Standard CIDR Notation, e.g. X.X.X.X/X | `string` | n/a | yes |
 | <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | (Required) The Name which should be used for this Resource Group. Changing this forces a new Resource Group to be created. | `string` | n/a | yes |
 | <a name="input_site_description"></a> [site\_description](#input\_site\_description) | Site description | `string` | n/a | yes |
-| <a name="input_site_location"></a> [site\_location](#input\_site\_location) | n/a | <pre>object({<br/>    city         = string<br/>    country_code = string<br/>    state_code   = string<br/>    timezone     = string<br/>  })</pre> | <pre>{<br/>  "city": "New York",<br/>  "country_code": "US",<br/>  "state_code": "US-NY",<br/>  "timezone": "America/New_York"<br/>}</pre> | no |
+| <a name="input_site_location"></a> [site\_location](#input\_site\_location) | Site location which is used by the Cato Socket to connect to the closest Cato PoP. If not specified, the location will be derived from the Azure region dynamicaly. | <pre>object({<br/>    city         = string<br/>    country_code = string<br/>    state_code   = string<br/>    timezone     = string<br/>  })</pre> | <pre>{<br/>  "city": null,<br/>  "country_code": null,<br/>  "state_code": null,<br/>  "timezone": null<br/>}</pre> | no |
 | <a name="input_site_name"></a> [site\_name](#input\_site\_name) | Your Cato Site Name Here | `string` | `null` | no |
 | <a name="input_site_type"></a> [site\_type](#input\_site\_type) | The type of the site | `string` | `"CLOUD_DC"` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | A Map of Keys and Values to Describe the infrastructure | `map(any)` | `null` | no |

@@ -6,7 +6,7 @@ resource "cato_socket_site" "azure-site" {
     native_network_range = var.native_network_range
     local_ip             = var.lan_ip
   }
-  site_location = var.site_location
+  site_location = local.cur_site_location
   site_type     = var.site_type
 }
 
@@ -78,7 +78,6 @@ resource "azurerm_linux_virtual_machine" "vsocket" {
     publisher = "catonetworks"
     product   = "cato_socket"
   }
-
 
   source_image_reference {
     publisher = "catonetworks"

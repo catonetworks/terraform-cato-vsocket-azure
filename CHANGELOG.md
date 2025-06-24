@@ -39,3 +39,8 @@
 - Bump Version of Azure RM to 4.31 from 4.1
 - Changed Default Site Type to CLOUD_DC
 - Added gitignore
+
+## 0.1.2 (2025-06-24)
+
+### Features
+- Updated module to include site_location dynamic resolution from azure region.
