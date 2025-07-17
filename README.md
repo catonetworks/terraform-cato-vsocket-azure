@@ -54,15 +54,16 @@ Apache 2 Licensed. See [LICENSE](https://github.com/catonetworks/terraform-cato-
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5 |
 | <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | ~> 4.31.0 |
+| <a name="requirement_cato"></a> [cato](#requirement\_cato) | >= 0.0.30 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
 | <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | ~> 4.31.0 |
-| <a name="provider_cato"></a> [cato](#provider\_cato) | n/a |
+| <a name="provider_cato"></a> [cato](#provider\_cato) | >= 0.0.30 |
 | <a name="provider_null"></a> [null](#provider\_null) | n/a |
 | <a name="provider_random"></a> [random](#provider\_random) | n/a |
 
@@ -122,6 +123,7 @@ No modules.
 | Name | Description |
 |------|-------------|
 | <a name="output_cato_license"></a> [cato\_license](#output\_cato\_license) | Cato site license info |
+| <a name="output_site_location"></a> [site\_location](#output\_site\_location) | n/a |
 | <a name="output_socket_site_id"></a> [socket\_site\_id](#output\_socket\_site\_id) | The ID of the Cato socket site |
 | <a name="output_socket_site_location"></a> [socket\_site\_location](#output\_socket\_site\_location) | The location of the Cato socket site |
 | <a name="output_socket_site_name"></a> [socket\_site\_name](#output\_socket\_site\_name) | The name of the Cato socket site |
