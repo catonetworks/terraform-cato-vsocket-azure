@@ -161,3 +161,28 @@ resource "cato_license" "license" {
   license_id = var.license_id
   bw         = var.license_bw == null ? null : var.license_bw
 }
+
+resource "cato_network_range" "routedAzure" {
+  for_each   = var.routed_networks
+  site_id    = cato_socket_site.azure-site.id
+  name       = each.key
+  range_type = "Routed"
+  gateway    = var.routed_ranges_gateway == null ? local.lan_first_ip : var.routed_ranges_gateway
+
+  # Access attributes from the value object
+  subnet            = each.value.subnet
+  translated_subnet = var.enable_static_range_translation ? coalesce(each.value.translated_subnet, each.value.subnet) : null
+  # This will be null if not defined, and the provider will ignore it.
+}
+
+# Update socket Bandwidth
+resource "cato_wan_interface" "wan" {
+  count                = var.upstream_bandwidth == null && var.downstream_bandwidth == null ? 0 : 1
+  site_id              = cato_socket_site.azure-site.id
+  interface_id         = "WAN1"
+  name                 = "WAN 1"
+  upstream_bandwidth   = var.upstream_bandwidth
+  downstream_bandwidth = var.downstream_bandwidth
+  role                 = "wan_1"
+  precedence           = "ACTIVE"
+}
