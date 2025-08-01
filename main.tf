@@ -163,11 +163,11 @@ resource "cato_license" "license" {
 }
 
 resource "cato_network_range" "routedAzure" {
-  for_each   = var.routed_networks
-  site_id    = cato_socket_site.azure-site.id
-  name       = each.key
-  range_type = "Routed"
-  gateway    = lookup(each.value.gateway, local.lan_first_ip)
+  for_each        = var.routed_networks
+  site_id         = cato_socket_site.azure-site.id
+  name            = each.key
+  range_type      = "Routed"
+  gateway         = coalesce(each.value.gateway, local.lan_first_ip)
   interface_index = each.value.interface_index
 
   # Access attributes from the value object
