@@ -161,15 +161,10 @@ variable "routed_networks" {
   type = map(object({
     subnet            = string
     translated_subnet = optional(string)
+    gateway           = optional(string)
+    interface_index   = optional(string, "LAN1")
   }))
   default = {}
-}
-
-# This variable remains the same as it applies to all networks.
-variable "routed_ranges_gateway" {
-  description = "Routed ranges gateway. If null, the first IP of the LAN subnet will be used."
-  type        = string
-  default     = null
 }
 
 ## Socket interface settings
