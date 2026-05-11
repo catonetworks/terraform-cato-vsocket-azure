@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.1.9 (2026-05-07)
+
+### Features
+- Updated cato provider to version 0.0.73
+
+### Fixes
+- Replaced dynamic Cato siteLocation API data source lookup with a hardcoded Azure region-to-site-location mapping
+- Mapping covers all major Azure regions across North America, Canada, Europe, Asia Pacific (including Australia and India), Middle East, Africa, and South America
+- Eliminates provider API dependency during plan/apply for site location resolution, improving reliability
+- User-provided site_location values still take precedence over the hardcoded defaults
+
 ## 0.1.8 (2026-05-06)
 
 ### Changed
